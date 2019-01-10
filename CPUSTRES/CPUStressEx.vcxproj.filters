@@ -45,6 +45,15 @@
     <ClInclude Include="AffinityDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SystemCPUSetDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemCpuSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CPUStressEx.cpp">
@@ -71,9 +80,18 @@
     <ClCompile Include="AffinityDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SystemCPUSetDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemCpuSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CPUStressEx.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="CPUSTRES.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
@@ -82,6 +100,7 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="publish_config.json" />
+    <None Include="CpuStres.ini" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\CPUStressEx.ico">

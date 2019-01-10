@@ -61,8 +61,9 @@ void DisplayProcessInfo(HANDLE hProcess, DWORD pid) {
 	auto error = ::GetPackageFullName(hProcess, &len, nullptr);
 
 	PCWSTR packageName{};
-	if (error == ERROR_SUCCESS) {
-		auto name = make_unique<wchar_t[]>(len);
+	unique_ptr<wchar_t[]> name;
+	if (error == ERROR_INSUFFICIENT_BUFFER) {
+		name = make_unique<wchar_t[]>(len);
 		error = ::GetPackageFullName(hProcess, &len, name.get());
 		packageName = name.get();
 	}
@@ -147,10 +148,10 @@ void BuildCapabilityMap() {
 	auto sid2 = reinterpret_cast<PSID>(sid2buffer.get());
 
 	do {
-		auto cr = ::strstr(caps, "\r\n");
+		auto cr = ::strstr(caps, "\n");
 		if (!cr) break;
 
-		string name(caps, cr);
+		string name(caps, cr - 1);
 		if (name.size() == 0)
 			break;
 
@@ -165,7 +166,9 @@ void BuildCapabilityMap() {
 				::LocalFree(ssid);
 			}
 		}
-		caps = cr + 2;
+		if (*cr == '\r')
+			cr++;
+		caps = cr + 1;
 	} while (true);
 
 }

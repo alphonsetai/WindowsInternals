@@ -4,6 +4,12 @@
 #include "Thread.h"
 #include "ThreadsListCtrl.h"
 
+struct AppSettings {
+	int InitialThreads;
+	int ActiveThreads;
+	ActivityLevel ActivityLevel;
+};
+
 // CChildView window
 
 class CChildView : public CWnd {
@@ -33,6 +39,12 @@ private:
 	std::vector < std::unique_ptr<CThread>> m_Threads;
 	std::vector<DWORD> m_CurrentThreadIds;
 	bool m_AutoRefreshThreadIndices = true;
+	int m_TotalThreads;
+	LARGE_INTEGER m_LastQueryCount, m_QueryFrequency;
+	long long m_LastProcessTimes = 0;
+	double m_ProcessCPU;
+	HANDLE m_hJob = nullptr;
+	int m_CpuUpdateInterval = 1000, m_CpuUpdateIndex = 1;
 
 	void CreateThreads();
 	std::unique_ptr<CThread> CreateThread();
@@ -40,6 +52,10 @@ private:
 	static PCWSTR ActivityLevelToString(ActivityLevel level);
 	static PCWSTR ThreadPriorityToString(int priority);
 	void UpdateThreadProcessIndices();
+	BOOL QueueItemForThreadPool(int busyPercent);
+	static DWORD CALLBACK BurnSomeCycles(int percent);
+	void UpdateCPUTimes();
+	AppSettings ReadConfiguration();
 
 	// Generated message map functions
 protected:
@@ -65,7 +81,7 @@ protected:
 	void OnUpdateProcessCreate4threads(CCmdUI *pCmdUI);
 	void OnChangeThreadPriority(UINT id);
 	void OnUpdateChangeThreadPriority(CCmdUI* pCmdUI);
-
+	
 	afx_msg void OnThreadAffinity();
 	afx_msg void OnThreadIdealcpu();
 //	afx_msg void OnProcessAffinity();
@@ -75,5 +91,16 @@ protected:
 	afx_msg void OnProcessRefresh();
 	afx_msg void OnOptionsAutorefreshthreadindices();
 	afx_msg void OnUpdateOptionsAutorefreshthreadindices(CCmdUI *pCmdUI);
+	afx_msg void OnCpusetsSystemcpuset();
+	afx_msg void OnCpusetsProcesscpuset();
+	afx_msg void OnCpusetsThreadselectedcpuset();
+	afx_msg void OnUpdateCpusetsThreadselectedcpuset(CCmdUI *pCmdUI);
+	afx_msg void OnProcessQueuethreadpoolwork();
+
+	void OnUpdateStatusThreads(CCmdUI*);
+	void OnUpdateStatusProcessCpu(CCmdUI*);
+	afx_msg void OnProcessCpuratelimit();
+	void OnCpuUpdateInterval(UINT id);
+	void OnUpdateCpuUpdateInterval(CCmdUI*);
 };
 
